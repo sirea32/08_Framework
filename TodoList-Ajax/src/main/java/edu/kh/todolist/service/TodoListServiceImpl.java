@@ -66,4 +66,10 @@ public class TodoListServiceImpl implements TodoListService{
 	public int todoDelete(int todoNo) {
 		return mapper.todoDelete(todoNo);
 	}
+
+	// 제목 검색
+	@Override
+	public String searchTitle(int todoNo) {
+		return mapper.searchTitle(todoNo);
+	}
 }
