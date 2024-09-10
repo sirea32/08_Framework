@@ -1,9 +1,14 @@
 package edu.kh.todolist.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +39,23 @@ import lombok.extern.slf4j.Slf4j;
  *  
  *  - forward/redirect 로 인식 X
  * */
+
+/* [HttpMessageConverter]
+ *  Spring에서 비동기 통신 시
+ * - 전달되는 데이터의 자료형
+ * - 응답하는 데이터의 자료형
+ * 위 두가지 알맞은 형태로 가공(변환)해주는 객체
+ * 
+ * - 문자열, 숫자 <-> TEXT
+ * - Map <-> JSON
+ * - DTO <-> JSON
+ * 
+ * (참고)
+ * HttpMessageConverter가 동작하기 위해서는
+ * Jackson-data-bind 라이브러리가 필요한데
+ * Spring Boot 모듈에 내장되어 있음
+ * (Jackson : 자바에서 JSON 다루는 방법 제공하는 라이브러리)
+ */
 
 @Slf4j
 @Controller
@@ -85,4 +107,123 @@ public class TodoAjaxController {
 		return todoTitle;
 	}
 	
+	
+	/**
+	 * 전체 할 일 개수 조회
+	 * @return 전체 할 일 개수
+	 */
+	@ResponseBody // 반환 값을 요청한 JS 코드로 그대로 돌려보내라
+	@GetMapping("totalCount")
+	public int getTotalCount() {
+		return service.getTotalCount();
+	}
+	// HTTP 응답 상태 코드
+	// 200 : 응답 성공 (200번대가 성공의 의미)
+	/* 400 : 잘못된 요청 (파라미터 누락)
+	 * 403 : (포비든) 접근이 거부된 상태(서버 접속 불가)
+	 * 404 : 찾을 수 없음(url 또는 forward 경로 잘못됨)
+	 * 405 : 허용되지 않은 요청(GET,POST 잘못 입력)
+	 * 500 : 서버 내부 오류
+	 * 		- Java, Thymeleaf 코드 문제 / DB 연결 문제
+	 *      Mybatis 관련 문제 ... 등 꼭 서버 콘솔 확인!!!
+	 */
+	
+	
+	/**
+	 * 완료된 할 일 개수 조회
+	 * @return
+	 */
+	@ResponseBody // 호출한 ajax 코드로 값 자체를 반환(forward X) 
+	@GetMapping("completeCount")
+	public int getCompleteCount() {
+		return service.getCompleteCount();
+	}
+	
+	
+	/**
+	 * 할 일 상세조회
+	 * @param todoNo
+	 * @return
+	 */
+	@ResponseBody
+	@GetMapping("todoDetail")
+	public /*String*/ Todo todoDetail(@RequestParam("todoNo") int todoNo) {
+		
+		/* 반환형 String인 경우 */
+		// - Java 객체는 JS에서 호환 X
+		// -> Java에서 JS에 호환될 수 있도록 JSON 형태 데이터를 반환
+//		return "{\"todoNo\":10, \"todoTitle\": \"제목 테스트\"}";
+		
+		/* 반환형 Todo(String이 아닌 Object) 인 경우 */
+		// -> Java 객체가 반환되면 JS에서 쓸 수 없는걸
+		//	 당연히 Spring이 알고 있으니까
+		//	 이를 자동으로 "HttpMessageConverter" 객체가 변환해줌!
+		return service.todoDetail(todoNo);
+	}
+	
+	
+	/**
+	 * 할 일 전체 목록 비동기 요청 처리
+	 * @return
+	 */
+	@ResponseBody // 비동기로 쓸거면 요거 있어야함
+								// 응답 데이터를 그대로 호출한 ajax 코드로 반환
+	@GetMapping("todoList")
+	public List<Todo> getTodoList() { // 반환형 List이기에 public String이 아닌 public List<>
+		return service.getTodoList();
+		
+		// 비동기 요청에 대한 응답으로 객체 반환시
+		// "HttpMessageConverter"가
+		// JSON(단일객체) 또는 JSONArray(다수/배열, 컬렉션) 형태로 변환
+		
+		// "[{"K":V}, {"K":V}, {"K":V}]" == JSONArray
+	}
+	
+	
+	/**
+	 * 할 일 상세조회
+	 * @param todoNo
+	 * @return
+	 */
+	@ResponseBody
+	@GetMapping("detail/{todoNo}")
+	public Todo selectTodo(@PathVariable("todoNo") int todoNo) {
+		return service.todoDetail(todoNo);
+	}
+	
+	
+	/**
+	 * 할 일 완료 여부 수정
+	 * @param todoNo
+	 * @return result
+	 */
+	@ResponseBody
+	@PutMapping("todoComplete")
+	public int todoComplete(@RequestBody int todoNo) {
+		return service.todoComplete(todoNo);
+	}
+	
+	
+	/**
+	 * 할 일 삭제
+	 * @param todoNo
+	 * @return result
+	 */
+	@ResponseBody
+	@DeleteMapping("todoDelete")
+	public int todoDelete(@RequestBody int todoNo) {
+		return service.todoDelete(todoNo);
+	}
+		
+	
+	/**
+	 * 할 일 수정
+	 * @param todo : JSON데이터가 변환되어 필드에 값에 대입된 객체
+	 * @return
+	 */
+	@ResponseBody
+	@PutMapping("todoUpdate")
+	public int todoUpdate(@RequestBody Todo todo) {
+		return service.todoUpdate(todo);
+	}
 }
