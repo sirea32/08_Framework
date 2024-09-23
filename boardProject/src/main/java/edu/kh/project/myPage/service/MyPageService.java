@@ -18,4 +18,21 @@ public interface MyPageService {
 	 */
 	int checkNickname(String input);
 
+	/**
+	 * 비밀번호 변경
+	 * @param currentPw
+	 * @param newPw
+	 * @param loginMember
+	 * @return
+	 */
+	int changePw(String currentPw, String newPw, Member loginMember);
+
+	/**
+	 * 회원 탈퇴 수행
+	 * @param memberPw
+	 * @param loginMember
+	 * @return
+	 */
+	int secession(String memberPw, Member loginMember);
+
 }
