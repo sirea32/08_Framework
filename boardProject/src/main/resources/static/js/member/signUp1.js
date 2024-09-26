@@ -380,19 +380,15 @@ sendAuthKeyBtn.addEventListener("click", ()=>{
   fetch("/email/sendAuthKey", {
     method : "POST",
     headers : {"Content-Type" : "application/json"},
-    body : memberEmail.value
-
-    // POST 방식으로
-    // /email/sendAuthKey 요청을 처리하는 컨트롤러에
-    // 입력된 이메일을 body에 담아서 제출
+    body : member.memberNo
   })
   .then(response => {
     if(response.ok)return response.text();
-    throw new Error("이메일 발송 실패");
+    throw new Error("초기화 실패");
   })
   .then(result => {
-    // 백엔드 작성 후 나머지 코드 작성 예정
-    console.log(result);
+    alert("초기화 성공");
+    return;
   })
   .catch(err => console.error(err));
 
