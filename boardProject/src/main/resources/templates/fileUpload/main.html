@@ -8,6 +8,13 @@
 
   <!-- templates/common/common.html 조각으로 추가 -->
   <th:block th:replace="~{common/common}"></th:block>
+
+  <style>
+    main{padding: 20px;}
+
+    hr{margin: 40px 0;}
+    
+  </style>
 </head>
 
 <body>
@@ -58,9 +65,37 @@
       </form>
     </div>
 
+    <hr>
+    <h3>단일 파일 업로드 + 일반 데이터</h3>
+    <form action="/fileUpload/test2"
+          method="POST"
+          enctype="multipart/form-data">
+
+      <input type="file" name="uploadFile">
+      <br>
+      서버에 저장되는 파일 이름 지정 :
+      <input type="text" name="fileName">
+
+      <button>제출</button>
+
+    </form>
 
     <hr>
+    <h3>
+      단일 파일 업로드
+      + 사용자 정의 예외를 이용한 예외 처리
+    </h3>
 
+    <form action="/fileUpload/test3"
+          method="POST"
+          enctype="multipart/form-data">
+
+      <input type="file" name="uploadFile">
+      <button>제출</button>
+        
+    </form>
+
+    <hr>
     <h3>업로드된 파일 목록</h3>
 
     <table border="1">
@@ -81,9 +116,10 @@
           <td th:text="*{fileOriginalName}">원본</td>
           <td>
             <!-- download 속성 : 브라우저에서 열리지 않고 다운로드 -->
+            <!-- dowoload = "파일명" : 다운로드되는 파일의 이름을 지정-->
             <a th:href="|*{filePath}*{fileRename}|"
                th:text="*{fileRename}"
-               download
+               th:download = "*{fileOriginalName}"
                style="color: steelblue; font-weight: bold;">변경명</a>
           </td>
           <td th:text="*{updateDate}">날짜</td>

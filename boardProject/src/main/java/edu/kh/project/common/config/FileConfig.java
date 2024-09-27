@@ -43,7 +43,18 @@ public class FileConfig implements WebMvcConfigurer{
 	private String testResourceLocation; // 테스트이미지 요청시
 																			 // 연결될 서버폴더 경로
 
+	
+	// ---------------------------------------
+	
+	// 프로필 이미지 요청 경로 + 서버 연결 폴더
+	
+	@Value("${my.profile.resource-handler}")
+	private String profileResourceHandler;
+	
+	@Value("${my.profile.resource-location}")
+	private String profileResourceLocation;
 
+	
 	/* MultipartResolver 설정 */
 	@Bean
 	public MultipartConfigElement configElement() {
@@ -83,9 +94,15 @@ public class FileConfig implements WebMvcConfigurer{
 		registry
 		.addResourceHandler(testResourceHandler)
 		.addResourceLocations(testResourceLocation);
-
 		// /images/test/ 로 시작하는 주소로 요청이 있을 경우
 		// 서버컴퓨터에 C:/uploadFiles/test/ 폴더로 연결
+		
+		
+		registry
+		.addResourceHandler(profileResourceHandler)
+		.addResourceLocations(profileResourceLocation);
+		// /images/profile/ 로 시작하는 주소로 요청이 있을 경우
+		// 서버컴퓨터에 C:/uploadFiles/profile/ 폴더로 연결
 	}
 	
 }
