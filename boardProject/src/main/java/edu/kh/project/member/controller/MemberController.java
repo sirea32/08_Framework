@@ -21,32 +21,32 @@ import lombok.extern.slf4j.Slf4j;
 
 @SessionAttributes({"loginMember"})
 @Controller // 요청/응답 제어 역할 명시 + Bean 등록(IOC)
-@RequestMapping("member") // member로 시작하는 요청 매핑
+@RequestMapping("member") // /member로 시작하는 요청 매핑
 @Slf4j // log 필드 자동 생성 Lombok 어노테이션
 public class MemberController {
 
-	@Autowired
+	@Autowired // 의존성 주입(DI)
 	private MemberService service;
 	
 	
-	/**
-	 * 로그인
+	/** 로그인
 	 * @param memberEmail : 제출된 이메일
 	 * @param memberPw : 제출된 비밀번호
 	 * @param saveEmail : 이메일 저장 여부(체크 안하면 null)
-	 * @param ra : 리다이렉트시 request scope로 값 전달하는 객체
+	 * @param ra : 리다이렉트 시 request scope로 값 전달하는 객체
 	 * @param model : 데이터 전달용 객체(기본값 request scope)
 	 * @param resp : 응답 방법을 제공하는 객체
 	 * @return
 	 */
 	@PostMapping("login")
 	public String login(
-			@RequestParam("memberEmail") String memberEmail,
-			@RequestParam("memberPw") String memberPw,
-			@RequestParam(name="saveEmail", required=false) String saveEmail, // name= value= 둘다 같은의미
-			RedirectAttributes ra,
-			Model model,
-			HttpServletResponse resp) {
+		@RequestParam("memberEmail") String memberEmail,
+		@RequestParam("memberPw") String memberPw,
+		@RequestParam(name="saveEmail", required = false) String saveEmail,
+		RedirectAttributes ra,
+		Model model,
+		HttpServletResponse resp
+		) {
 		
 //		log.debug("memberEmail : {}", memberEmail);
 //		log.debug("memberPw : {}", memberPw);
@@ -54,26 +54,31 @@ public class MemberController {
 		// 로그인 서비스 호출
 		Member loginMember = service.login(memberEmail, memberPw);
 		
+		
 		if(loginMember == null) { // 로그인 실패
 			ra.addFlashAttribute("message", "이메일 또는 비밀번호가 일치하지 않습니다");
-		} else { // 로그인 성공
+	
+		}
+		
+		else { // 로그인 성공
+			
 			// loginMember를 session scope에 추가
-			// 방법1) HttpSession 이용
-			// 방법2) @SessionAttributes + Model 이용 방법
+			// 방법 1) HttpSession 이용
+			// 방법 2) @SessionAttirbutes + Model 이용 방법
 			
 			/* Model을 이용해서 Session scope에 값 추가하는 방법 */
-			// 1. Model에 값 추가
+			// 1. model에 값 추가 (request)
 			model.addAttribute("loginMember", loginMember);
 			
 			// 2. 클래스 선언부 위에 @SessionAttributes({"key"}) 추가
 			// -> key 값은 model에 추가된 key 값 "loginMember" 작성
 			// (request -> session)
 			
-			// @SessionAttributes :
+			// @SessionAttributes : 
 			// Model 추가된 값 중 session scope로 올리고 싶은 값의
 			// key를 작성하는 어노테이션
 			
-			// ----------------------------------------------------
+			// --------------------------------------------------
 			/* 이메일 저장 코드(Cookie) */
 			
 			// 1. Cookie 객체 생성(K:V)
@@ -82,51 +87,50 @@ public class MemberController {
 			// 2. 만들어진 Cookie 사용될 경로(url)
 			cookie.setPath("/"); // localhost 또는 현재 ip 이하 모든 주소
 			
-			// 3. cookie가 유지되는 시간(수명) 설정
+			// 3. Cookie가 유지되는 시간(수명) 설정
 			if(saveEmail == null) { // 체크 X
-				cookie.setMaxAge(0); // 만들어지자마자 만료
-														 // == 기존에 쿠기가 있으면 덮어씌우고 없어짐
+				cookie.setMaxAge(0); // 만들어지자 마자 만료
+											 // == 기존에 쿠기가 있으면 덮어씌우고 없어짐
 				
 			} else { // 체크 O
-				cookie.setMaxAge(60 * 60 * 24 * 30); // 30일 초단위로 작성
+				cookie.setMaxAge(60 * 60 * 24 * 30); // 30일 초 단위로 작성
 			}
+			
 			// 4. resp 객체에 추가해서 클라이언트에게 전달
 			resp.addCookie(cookie);
 			
 			
-			// ----------------------------------------------------
+			// --------------------------------------------------
+			
 		}
 		
-		
-		return "redirect:/"; // 메인페이지 리다이렉트
+		return "redirect:/"; // 메인 페이지 리다이렉트
 	}
 	
 	
-	/**
-	 * 로그아웃
+	/** 로그 아웃
 	 * @param status
-	 * @return
+	 * @return 
 	 */
 	@GetMapping("logout")
 	public String logout(SessionStatus status) {
 		
 		/* SessionStatus
 		 * - @SessionAttributes를 이용해 등록된 객체(값)의 상태를
-		 * 	 관리하는 객체
+		 *   관리하는 객체
 		 * 
 		 * - SessionStatus.setComplete();
-		 * 	-> 세션 상태 완료 == 없앰(만료)
+		 *  -> 세션 상태 완료 == 없앰(만료)
 		 */
 		status.setComplete();
 		
-		return "redirect:/"; // 메인 페이지로 날려버리겠당
+		return "redirect:/"; // 메인 페이지
 	}
 	
 	
-	//----------------------------------------------------------
+	//------------------------------------------------------------
 	
-	/**
-	 * 회원가입 페이지 전환
+	/** 회원 가입 페이지 전환
 	 * @return
 	 */
 	@GetMapping("signUp")
@@ -135,7 +139,6 @@ public class MemberController {
 	}
 	
 	
-
 	/** 회원 가입 수행
 	 * @param inputMember : 입력값이 저장된 Member 객체(커맨드 객체)
 	 * @param ra : 리다이렉트 시 request scope로 값 전달
@@ -167,33 +170,33 @@ public class MemberController {
 	}
 	
 	
-	/**
-	 * 이메일 중복 검사(비동기)
+	/** 이메일 중복 검사(비동기)
 	 * @param email : 입력된 이메일
-	 * @return 0 : 중복X , 1 : 중복O
+	 * @return 0 : 중복 X, 1 : 중복 O
 	 */
-	@ResponseBody // 반환 값을 응답 본문(AJAX코드)로 반환
+	@ResponseBody // 반환 값을 응답 본문(ajax 코드)로 반환
 	@GetMapping("emailCheck")
 	public int emailCheck(
-			@RequestParam("email") String email) {
-		
+		@RequestParam("email") String email) {
 		return service.emailCheck(email);
 	}
 	
 	
-	/**
-	 * 닉네임 중복 검사(비동기)
-	 * @param nickname : 입력된 닉네임
-	 * @return
+	/** 닉네임 중복 검사(비동기)
+	 * @param nickname
+	 * @return 0: 중복 X, 1 : 중복 O
 	 */
 	@ResponseBody
 	@GetMapping("nicknameCheck")
-	public int nicknameCheck(
-			@RequestParam("nickname") String nickname) {
-		
+	public int nicknameCheck(@RequestParam("nickname") String nickname) {
 		return service.nicknameCheck(nickname);
 	}
+	
+	
+	
 }
+
+
 
 
 /* Cookie란?
@@ -211,3 +214,8 @@ public class MemberController {
  * - Cookie는 HttpServletResponse를 이용해서 생성,
  *   클라이언트에게 전달(응답) 할 수 있다
  */
+
+
+
+
+

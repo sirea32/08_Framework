@@ -2,7 +2,7 @@
   <section>
     <!-- 클릭 시 메인 페이지로 이동하는 로고 -->
     <a href="/">
-      <img src="/images/logo.gif" alt="메인 로고" id="homeLogo">
+      <img src="/images/logo.png" alt="메인 로고" id="homeLogo">
     </a>
   </section>
 
@@ -37,18 +37,18 @@
 
 
   <section>
-    <!-- 우측상단 로그인 / 드롭다운 메뉴 -->
+    <!-- 우측 상단 로그인 / 드롭다운 메뉴 -->
     <div class="header-top-menu">
 
       <!-- 로그인 X -->
-      <th:block th:unless= "${session.loginMember}">
-        <a href="/">메인페이지</a>
+      <th:block th:unless="${session.loginMember}">
+        <a href="/">메인 페이지</a>
         |
         <a href="/member/login">로그인</a>
       </th:block>
-      
+
       <!-- 로그인 O -->
-      <th:block th:if= "${session.loginMember}">
+      <th:block th:if="${session.loginMember}">
 
         <label for="headerMenuToggle">
           [[${session.loginMember.memberNickname}]]
@@ -76,13 +76,13 @@
 <nav>
   <ul>
     <li>
-      <a href="#">공지사항</a>
+      <a href="/board/1">공지사항</a>
     </li>
     <li>
-      <a href="#">자유 게시판</a>
+      <a href="/board/2">자유 게시판</a>
     </li>
     <li>
-      <a href="#">질문 게시판</a>
+      <a href="/board/3">정보 게시판</a>
     </li>
 
     <li>

@@ -58,6 +58,8 @@
 
         </form>
 
+        <input type="file" id="test" multiple  accept="image/*">
+
 
       </section>
 
@@ -68,6 +70,24 @@
    <!-- 푸터 추가 -->
   <th:block th:replace="~{common/footer}"></th:block>
   
+  <script th:inline="javascript">
+    // sciprt 태그가 분리 되어 있어도
+    // 먼저 작성된 변수, 함수느
+    // 뒷쪽에 작성된 script 태그에서 사용할 수 있다!!!
+
+    // th:inline="javascript" 
+    // - Java 데이터를 JS 타입에 맞게 자동 변환
+
+    // messsages.properties의 값을 얻어와 JS 전역 변수로 선언
+    const userDefaultImage = /*[[#{user.default.image}]]*/ "기본이미지";
+
+
+    // 로그인된 회원의 프로필 이미지
+    // -> 기본 이미지인 경우 null
+    const loginMemberProfileImg 
+      = /*[[${session.loginMember.profileImg}]]*/ "프로필 이미지";
+    
+  </script>
 
   <script src="/js/myPage/myPage.js"></script>
 </body>

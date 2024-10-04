@@ -4,18 +4,16 @@ import java.util.Map;
 
 public interface EmailService {
 
-	/**
-	 * 이메일 발송 서비스
-	 * @param string
+	/** 이메일 발송 서비스
+	 * @param htmlName 
 	 * @param email
-	 * @return 
+	 * @return
 	 */
 	int sendEmail(String htmlName, String email);
 
-	/**
-	 * 인증 번호 확인
+	/** 인증 번호 확인
 	 * @param map
-	 * @return
+	 * @return 
 	 */
 	boolean checkAuthKey(Map<String, String> map);
 

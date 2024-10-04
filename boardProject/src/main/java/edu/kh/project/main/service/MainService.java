@@ -6,28 +6,24 @@ import edu.kh.project.member.dto.Member;
 
 public interface MainService {
 
-	/**
-	 * 전체 회원 조회
-	 * @return
+	/** 전체 회원 조회
+	 * @return list
 	 */
 	List<Member> selectMemberList();
 
-	/**
-	 * 빠른 로그인
+	/** 빠른 로그인
 	 * @param memberNo
 	 * @return loginMember
 	 */
 	Member directLogin(int memberNo);
 
-	/**
-	 * 비밀번호 초기화
+	/** 비밀번호 초기화
 	 * @param memberNo
-	 * @return
+	 * @return result
 	 */
 	int resetPw(int memberNo);
 
-	/**
-	 * 회원 탈퇴 상태 변경
+	/** 회원 탈퇴 상태 변경
 	 * @param memberNo
 	 * @return
 	 */

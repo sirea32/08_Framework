@@ -21,10 +21,11 @@ public class EmailConfig {
 	
 	@Value("${spring.mail.password}")
 	private String password;
-	
+
 	@Bean
 	public JavaMailSender javaMailSender() {
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		
 		Properties prop = new Properties();
 		prop.setProperty("mail.transport.protocol", "smtp");
 		prop.setProperty("mail.smtp.auth", "true");
@@ -33,12 +34,14 @@ public class EmailConfig {
 		prop.setProperty("mail.smtp.ssl.trust","smtp.gmail.com");
 		prop.setProperty("mail.smtp.ssl.protocols","TLSv1.2");
 		
+		
 		mailSender.setUsername(userName);
 		mailSender.setPassword(password);
 		mailSender.setHost("smtp.gmail.com");
 		mailSender.setPort(587);
 		mailSender.setDefaultEncoding("UTF-8");
 		mailSender.setJavaMailProperties(prop);
+		
 		return mailSender;
 	}
 }

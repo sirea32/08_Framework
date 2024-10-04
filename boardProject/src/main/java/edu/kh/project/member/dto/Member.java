@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-// Lombok : Java 개발시 자주 사용하는 구문을
-//					컴파일시 자동추가하는 라이브러리
+// Lombok : Java 개발 시 자주 사용하는 구문을 
+//	컴파일 시 자동 추가하는 라이브러리
 
 @Getter
 @Setter

@@ -2,16 +2,15 @@
 function getCookie(key){
 
   // 1. cookie 전부 얻어오기(string)
-  const cookies = document.cookie; // "K=V;K=V;..."
+  const cookies = document.cookie; // "K=V;K=V;..." 
   // console.log(cookies);
 
-  // 2.";" 을 구분자로 삼아서 배열형태로 쪼개기(나누기/split)
+  // 2.";" 을 구분자로 삼아서 배열 형태로 쪼개기(split)
   const arr = cookies.split(";"); // ["K=V", "K=V"]
   // console.log(arr);
 
   // 3. 쪼개진 배열 요소를 하나씩 꺼내서
-  //    JS 객체에 K:V 형태로 추가
-  //    보통 키밸류 쌍을 엔트리라고함
+  //  JS 객체에 K:V 형태로 추가
 
   const cookieObj = {}; // 빈 객체 생성
 
@@ -23,9 +22,7 @@ function getCookie(key){
     cookieObj[temp[0]] = temp[1];
   }
 
-  // console.log(cookieObj);
-
-  // 매개변수로 전달받은 key와 일치하는 value 반환
+  // 매개변수로 전달 받은 key와 일치하는 value 반환
   return cookieObj[key];
 }
 
@@ -35,13 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveEmail = getCookie("saveEmail"); // 쿠키에 저장된 Email 얻어오기
 
   // 저장된 이메일이 없을 경우
-  if(saveEmail == undefined) return;
+  if(saveEmail == undefined) return; 
 
   const memberEmail 
-  = document.querySelector("#loginForm input[name=memberEmail");
+    = document.querySelector("#loginForm input[name=memberEmail]");
 
-  const checkbox
-  = document.querySelector("#loginForm input[name=saveEmail");
+  const checkbox 
+    = document.querySelector("#loginForm input[name=saveEmail]");
 
   // 로그인 상태인 경우 함수 종료
   if(memberEmail == null) return;
@@ -49,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 이메일 입력란에 저장된 이메일 출력
   memberEmail.value = saveEmail;
 
-  // 이메일 저장 체크박스에 체크 상태로 바꾸기
+  // 이메일 저장 체크박스를 체크 상태로 바꾸기
   checkbox.checked = true;
 });
 
@@ -58,9 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // tbody 태그
 const memberList = document.querySelector("#memberList");
-
-/* 메인 페이지 회원 목록 비동기 조회 함수 */
-// --------------------------------------------------------------
 
 /* 메인 페이지 회원 목록 비동기 조회 함수 */
 const selectMemberList = () => {
@@ -79,8 +73,8 @@ const selectMemberList = () => {
     // 1) #memberList 기존 내용 없애기
     memberList.innerHTML = "";
 
-    // 2) 조회결과인 list를 반복 접근해서
-    //    #memberList에 조회된 내용으로 tr,td,th 만들어 넣기
+    // 2) 조회 결과인 list를 반복 접근해서 
+    //   #memberList에 조회된 내용으로 tr,td,th 만들어 넣기
     list.forEach(member => {
       // 매개변수 member == 조회된 list에서 하나씩 꺼낸 요소
 
@@ -108,16 +102,17 @@ const selectMemberList = () => {
       // 만약 탈퇴 상태인 경우 로그인 버튼 비활성화
       if(member.memberDelFl === 'Y'){
         loginBtn.disabled = true;
+
       } else {
 
         // 탈퇴 상태가 아닌 경우
         // 만들어진 로그인 버튼에 클릭 이벤트 추가
-        loginBtn.addEventListener("click", ()=>{
+        loginBtn.addEventListener("click", () => {
 
           // body 태그 제일 마지막에 form 태그를 추가해
           // 제출하는 형식으로 코드 작성
-          // 왜? POST방식 요청을 하고 싶기 때문에
-
+          // 왜? POST 방식 요청을 하고 싶기 때문에
+          
           const form = document.createElement("form");
           form.action = "/directLogin";
           form.method = "POST";
@@ -128,13 +123,15 @@ const selectMemberList = () => {
           input.value = member.memberNo;
 
           form.append(input); // form 자식으로 input 추가
-          
+
           // body 태그 자식으로 form 추가
           document.querySelector("body").append(form);
-
+          
           form.submit(); // 제출
-        });
+        })
       }
+
+
 
       // th > button 만들어서 "비밀번호 초기화" 글자 세팅
       const th5 = document.createElement("th");
@@ -142,24 +139,23 @@ const selectMemberList = () => {
       initBtn.innerText = "비밀번호 초기화";
       th5.append(initBtn);
 
-      initBtn.addEventListener("click", ()=>{
-        fetch("/resetPw", {
+      initBtn.addEventListener("click", () => {
+
+        fetch("/resetPw ", {
           method : "POST",
           headers : {"Content-Type" : "application/json"},
           body : member.memberNo
         })
         .then(resp => {
-          if(resp.ok)return resp.text();
-          throw new Error("초기화 실패");
+          if(resp.ok) return resp.text();
+          throw new Error("비밀번호 초기화 오류");
         })
-        .then(reslt => {
-          // alert("초기화 성공!");
-          if(reslt > 0) alert("초기화 성공");
-          else alert("실패");
+        .then(aaa => {
+          if(aaa > 0) alert("비밀번호가 초기화 되었습니다");
+          else alert("실패!");
         })
         .catch(er => console.error(er));
       })
-
 
       // th > button 만들어서 "탈퇴 상태 변경" 글자 세팅
       const th6 = document.createElement("th");
@@ -167,23 +163,23 @@ const selectMemberList = () => {
       changeBtn.innerText = "탈퇴 상태 변경";
       th6.append(changeBtn);
 
-      changeBtn.addEventListener("click", ()=>{
+      changeBtn.addEventListener("click", () => {
+
         fetch("/changeStatus", {
           method : "PUT",
           headers : {"Content-Type" : "application/json"},
           body : member.memberNo
         })
-        .then(repon => {
-          if(repon.ok) return repon.text();
-          throw new Error("실패 에러 땡떙");
+        .then(resp => {
+          if(resp.ok) return resp.text();
+          throw new Error("탈퇴 상태 변경 오류");
         })
-        .then(rsult => {
-          if(rsult > 0) // 써도 안써도된다
-          selectMemberList();
-          // return; 써도 안써도 된다
+        .then(result => {
+          if(result > 0)  selectMemberList();
         })
-        .catch(rror => console.error(rror));
+        .catch(er => console.error(er));
       })
+
 
       // tr에 만든 th,td 모두 추가
       tr.append(th1, td2, th3, th4, th5, th6);
@@ -191,12 +187,15 @@ const selectMemberList = () => {
       // #memberList에 tr 추가
       memberList.append(tr);
     })
+
   })
   .catch(err => console.error(err));
 
 }
 
-/* 페이지 로딩(렌더링) 끝난후 수행 */
-document.addEventListener("DOMContentLoaded", ()=>{
+
+
+/* 페이지 로딩(렌더링) 끝난 후 수행 */
+document.addEventListener("DOMContentLoaded", () => {
   selectMemberList();
 })
