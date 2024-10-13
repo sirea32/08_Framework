@@ -75,10 +75,9 @@ public interface BoardMapper {
 	 */
 	List<Map<String, String>> selectBoardTypeList();
 
-	/**
-	 * 댓글 목록 조회
+	/** 댓글 목록 조회
 	 * @param boardNo
-	 * @return
+	 * @return commentList
 	 */
 	List<Comment> selectCommentList(int boardNo);
 	

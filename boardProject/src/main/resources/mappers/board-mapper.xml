@@ -87,7 +87,7 @@
 		(SELECT COUNT(*) 
 		 FROM "COMMENT" C
 		 WHERE C.BOARD_NO = B.BOARD_NO
-		 AND C.COMMENT_DEL_FL = 'N') AS "COMMENT_COUNT",
+		 AND   C.COMMENT_DEL_FL = 'N') AS "COMMENT_COUNT",
 		 
 		(SELECT COUNT(*)
 		 FROM "BOARD_LIKE" L
@@ -252,7 +252,7 @@
   </select>
   
   
-  <!-- 댓글 목록 조회 -->
+  
   
   
   

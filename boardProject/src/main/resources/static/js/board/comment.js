@@ -203,14 +203,15 @@ const showUpdateComment = (btn) => {
   // == 이미 열려있는 수정 화면이 있으면 닫아버리기
   const temp = document.querySelector(".update-textarea");
 
-  if(temp != null){ // 이미 열려있는 수정화면이 있을 경우
+  if(temp != null){ // 이미 열려있는 수정 화면이 있을 경우
 
-    if(confirm("수정 중인 댓글이 있습니다." 
-                + "현재 댓글을 수정 하시겠습니까?") === true){
+    if(confirm("수정 중인 댓글이 있습니다. " 
+              + "현재 댓글을 수정 하시겠습니까?") === true){
+                
       const commentRow = temp.parentElement; // 열려있는 댓글 행
       commentRow.after(beforeCommentRow); // 백업본을 다음 요소로 추가
       commentRow.remove(); // 열려있던 행 삭제
-
+      
       // 백업본 버튼에 이벤트 추가
       const childeCommentBtn = beforeCommentRow.querySelector(".child-comment-btn");
       const updateCommentBtn = beforeCommentRow.querySelector(".update-comment-btn");
@@ -219,12 +220,11 @@ const showUpdateComment = (btn) => {
       childeCommentBtn.addEventListener("click", () => showChildComment(childeCommentBtn));
       updateCommentBtn.addEventListener("click", () => showUpdateComment(updateCommentBtn));
       deleteCommentBtn.addEventListener("click", () => deleteComment(deleteCommentBtn));
-
-    } else {
+    
+    } else{
       return;
     }
   }
-
 
 
   // 1. 수정하려는 댓글(li) 요소 얻어오기
@@ -262,7 +262,8 @@ const showUpdateComment = (btn) => {
   const updateBtn = document.createElement("button");
   updateBtn.innerText = "수정";
 
-  updateBtn.addEventListener("click", ()=>{
+  // 수정 버튼 클릭 시 댓글 수정 (ajax)
+  updateBtn.addEventListener("click", () => {
     const data = {
       "commentNo" : commentNo,
       "commentContent" : textarea.value
@@ -286,8 +287,13 @@ const showUpdateComment = (btn) => {
         alert("댓글 수정 실패");
       }
     })
-    .catch(err=>console.error(err));
+    .catch(err => console.error(err));
+
+
   })
+
+
+
 
 
   // 9. 취소 버튼 생성
@@ -304,23 +310,29 @@ const showUpdateComment = (btn) => {
     commentRow.remove(); // 수정 화면으로 변환된 행 삭제
 
     /* 원상 복구된 댓글의 버튼에 이벤트 추가하기 */
-    const childCommentBtn = beforeCommentRow.querySelector(".child-comment-btn");
+    const childCommentBtn 
+      = beforeCommentRow.querySelector(".child-comment-btn");
 
-    childCommentBtn.addEventListener("click", ()=>{
+    childCommentBtn.addEventListener("click", () => {
       showChildComment(childCommentBtn);
     });
 
-    const updateCommentBtn = beforeCommentRow.querySelector(".update-comment-btn");
-    
-    updateCommentBtn.addEventListener("click", ()=>{
+
+    const updateCommentBtn 
+      = beforeCommentRow.querySelector(".update-comment-btn");
+
+    updateCommentBtn.addEventListener("click", () => {
       showUpdateComment(updateCommentBtn);
     });
 
-    const deleteCommentBtn = beforeCommentRow.querySelector(".delete-comment-btn");
-    
-    deleteCommentBtn.addEventListener("click", ()=>{
+
+    const deleteCommentBtn 
+      = beforeCommentRow.querySelector(".delete-comment-btn");
+
+    deleteCommentBtn.addEventListener("click", () => {
       deleteComment(deleteCommentBtn);
-    });
+    })
+
 
   })
 
@@ -410,14 +422,6 @@ document.addEventListener("DOMContentLoaded", () => {
   addEventDeleteComment(); // 삭제 버튼에 이벤트 추가
   addEventUpdateComment(); // 수정 버튼에 이벤트 추가
 });
-
-
-
-
-
-
-
-
 
 
 

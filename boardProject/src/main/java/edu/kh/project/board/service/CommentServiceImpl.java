@@ -10,20 +10,20 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
 
 	private final CommentMapper mapper;
-	
+
 	// 댓글 등록
 	@Override
 	public int commentInsert(Comment comment) {
-
+		
 		int result = mapper.commentInsert(comment);
 		
-		// 삽입 성공시 댓글 번호 반환
+		// 삽입 성공 시 댓글 번호 반환
 		if(result > 0) return comment.getCommentNo();
 		
-		// 실패시 0
+		// 실패 시 0
 		return 0;
 	}
 	
@@ -33,9 +33,12 @@ public class CommentServiceImpl implements CommentService{
 		return mapper.commentDelete(commentNo, memberNo);
 	}
 	
+	
 	// 댓글 수정
 	@Override
 	public int commentUpdate(Comment comment) {
 		return mapper.commentUpdate(comment);
 	}
+	
+	
 }
