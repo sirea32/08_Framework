@@ -13,6 +13,7 @@ public interface SseMapper {
   // 알림 삽입
   int insertNotification(Notification notification);
 
+  
   /**
    * 알림을 받아야하는 회원의 번호 + 안읽은 알람 개수 조회
    * @param notificationNo
@@ -27,5 +28,15 @@ public interface SseMapper {
    * @return list
    */
   List<Notification> selectNotificationList(int memberNo);
+
+  
+  /** 알림 개수 조회 */
+	int notReadCheck(int memberNo);
+
+	/** 알림 삭제 */
+	void deleteNotification(int notificationNo);
+
+  /** 알림 읽음 여부 변경(N->Y) */
+	void updateNotification(int notificationNo);
   
 }

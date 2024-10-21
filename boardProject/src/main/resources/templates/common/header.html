@@ -37,7 +37,7 @@
 
 
   <section>
-
+    
     <!-- 알림 영역 -->
     <div class="notification-container" th:if="${session.loginMember}">
 
@@ -52,8 +52,12 @@
       <ul class="notification-list">
 
       </ul>
+      
+    </div>
 
-    </div>    
+
+
+
 
     <!-- 우측 상단 로그인 / 드롭다운 메뉴 -->
     <div class="header-top-menu">
@@ -101,6 +105,10 @@
 
     <li>
       <a href="/fileUpload/main">파일 업로드 연습</a>
+    </li>
+
+    <li th:if="${session.loginMember}">
+      <a href="/chatting">채팅</a>
     </li>
   </ul>
 </nav>
